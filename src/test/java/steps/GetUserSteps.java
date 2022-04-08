@@ -6,6 +6,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.restassured.response.Response;
 import io.restassured.response.ResponseOptions;
+import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 
 import java.util.LinkedHashMap;
@@ -47,8 +48,27 @@ public class GetUserSteps {
         Assertions.assertEquals(responseData.get("name"), expectedName);
     }
 
+    @Then("User number {int} shouldn't exist")
+    public void userNumberDoesNotExist(int number) {
+        Assert.assertTrue("User number " + number + " is exist but shouldn't.", isOutOfBounds(userList, number - 1));
+    }
+
+    private boolean isOutOfBounds(List list, int pos) {
+        try {
+            list.get(pos);
+        } catch (IndexOutOfBoundsException e) {
+            return true;
+        }
+        return false;
+    }
+
     @Then("User number {int} should have a name")
     public void userNumberShouldHaveAName(int number) {
-        notNull(userList.get(number).get("name"), "User №" + number + " not exist!");
+        notNull(userList.get(number - 1).get("name"), "User №" + number + " not exist!");
+    }
+
+    @Then("User number {int} should exist")
+    public void userNumberShouldExist(int number) {
+        Assert.assertFalse("User number " + number + " does not exist.", isOutOfBounds(userList, number - 1));
     }
 }
