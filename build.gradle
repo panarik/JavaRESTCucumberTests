@@ -10,14 +10,12 @@ repositories {
 }
 
 dependencies {
-    //Test runner
+    //API tools
+    implementation 'io.rest-assured:rest-assured:5.0.1'
+
+    //Test tools
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
-
-    //API
-    testImplementation 'io.rest-assured:rest-assured:5.0.1'
-
-    //Cucumber
     testImplementation 'io.cucumber:cucumber-java:7.2.3'
     testImplementation 'io.cucumber:cucumber-junit:7.2.3'
 
