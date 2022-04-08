@@ -10,16 +10,17 @@ repositories {
 }
 
 dependencies {
-    //API tools
+    // API tools.
     implementation 'io.rest-assured:rest-assured:5.0.1'
 
-    //Test tools
+    // Parsing JSON.
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.2.2'
+
+    // Test tools.
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
     testImplementation 'io.cucumber:cucumber-java:7.2.3'
     testImplementation 'io.cucumber:cucumber-junit:7.2.3'
-
-
 }
 
 test {

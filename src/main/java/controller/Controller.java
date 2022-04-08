@@ -22,22 +22,25 @@ public class Controller {
         request = RestAssured.given().spec(builder.build());
     }
 
-    public static ResponseOptions<Response> getResponseURL(String url) {
+    public static ResponseOptions<Response> performGET(String path) {
         try {
-            return request.get(new URI(url));
+            return request.get(new URI(path));
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public static void getResponseUrlWithParam(String url, Map<String, String> params) {
-        request.pathParams(params);
+    public static ResponseOptions<Response> performPOST(String path, Map<String, String> headers, Map<String, String> body) {
+        request.headers(headers); // add headers
+        request.body(body); // add body
         try {
-            request.get(new URI(url));
+            URI uri = new URI(path);
+            return request.post(uri);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
 }
