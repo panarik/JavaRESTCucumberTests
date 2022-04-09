@@ -17,15 +17,14 @@ import static org.apache.http.util.Asserts.notNull;
 
 public class GetUserSteps {
 
-    private static ResponseOptions<Response> response;
-    private static List<LinkedHashMap<String, Object>> userList = new LinkedList<>(); // list with users
-    private static final String USERS_PATH = "/public-api/users/";
+    private final Controller controller = new Controller();
+    private ResponseOptions<Response> response; // response for checking
+    private List<LinkedHashMap<String, Object>> userList = new LinkedList<>(); // list with users
 
-    private StringBuilder path = new StringBuilder(USERS_PATH); // path to http request
 
     @Given("GET users")
     public void getUsers() {
-        response = Controller.performGET(path.toString()); // run request
+        response = controller.performGET(); // run request
         userList = response.getBody().jsonPath().get("data"); // fill list with users
     }
 

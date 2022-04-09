@@ -1,46 +1,55 @@
 package controller;
 
-import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import io.restassured.response.ResponseOptions;
 import io.restassured.specification.RequestSpecification;
 
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.Map;
+
+import static io.restassured.RestAssured.given;
 
 public class Controller {
 
-    public static RequestSpecification request;
-
-    public Controller() {
-        RequestSpecBuilder builder = new RequestSpecBuilder();
-        builder.setBaseUri("http://gorest.co.in:80");
-        builder.setContentType(ContentType.JSON);
-        request = RestAssured.given().spec(builder.build());
+    /**
+     * Perform GET request.
+     * URL: https://gorest.co.in/public-api/users/
+     * Headers: standard
+     * Body: NONE
+     *
+     * @return {@link Response} For checking and parsing response fields.
+     */
+    public Response performGET() {
+        return given().spec(setupSpec()).get();
     }
 
-    public static ResponseOptions<Response> performGET(String path) {
-        try {
-            return request.get(new URI(path));
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-        return null;
+    /**
+     * Perform POST request.
+     * URL: https://gorest.co.in/public-api/users/
+     * Headers: Content-Type, Authorization.
+     * Body: NONE
+     *
+     * @param body - Custom body with {@link HashMap} format: key-value.
+     * @return {@link Response} For checking and parsing response fields.
+     */
+    public Response performPOST(Map<String, String> body) {
+        return given().spec(setupSpec()).headers(getHeaders()).body(body).post(); // post with Spec options
     }
 
-    public static ResponseOptions<Response> performPOST(String path, Map<String, String> headers, Map<String, String> body) {
-        request.headers(headers); // add headers
-        request.body(body); // add body
-        try {
-            URI uri = new URI(path);
-            return request.post(uri);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-        return null;
+    private RequestSpecification setupSpec() {
+        return new RequestSpecBuilder()
+                .setBaseUri("https://gorest.co.in/public-api/")
+                .setBasePath("/users")
+                .setContentType(ContentType.JSON)
+                .build();
+    }
+
+    private Map<String, String> getHeaders() {
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Content-Type", "application/json");
+        headers.put("Authorization", "Bearer a54c40b47cebe37441b2c2467d25eb79b67365ae17685a55fb5ee284d8cd5d83");
+        return headers;
     }
 
 }
