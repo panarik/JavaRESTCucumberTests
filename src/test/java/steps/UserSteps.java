@@ -1,6 +1,8 @@
 package steps;
 
 import controller.Controller;
+import io.cucumber.java.After;
+import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.restassured.response.Response;
@@ -19,6 +21,10 @@ public class UserSteps {
     private List<LinkedHashMap<String, Object>> usersList = new LinkedList<>(); // list with users
     Map<String, String> createdUser = new HashMap<>(); // list with created user fields
     Map<String, String> searchableUser = new HashMap<>(); // list with searched user fields
+
+    @Before
+    public void testSetup() {
+    }
 
     @Given("GET users")
     public void getUsers() {
@@ -74,18 +80,15 @@ public class UserSteps {
         Assert.assertEquals("Status code is: '" + actualCode + "' but should be  '" + expectedCode + "'.", actualCode, expectedCode);
     }
 
-    @Then("Search user by this id and compare his fields with created user")
+    @Then("Search user by current id and compare his fields with created user")
     public void searchUserByIdAndCheckHisFields() {
         response = controller.performGetUserById(createdUser.get("id")); // search created user
+        System.out.println(response.body().print());
         searchableUser = getStringMap(response.getBody().jsonPath().get("data")); // fill fields searched user
-        Assert.assertEquals(searchableUser.get("id"), createdUser.get("id"));
-        Assert.assertEquals(searchableUser.get("name"), createdUser.get("name"));
-        Assert.assertEquals(searchableUser.get("email"), createdUser.get("email"));
-        Assert.assertEquals(searchableUser.get("gender"), createdUser.get("gender"));
-        Assert.assertEquals(searchableUser.get("status"), createdUser.get("status)"));
+        Assert.assertEquals(createdUser, searchableUser); //match all fields
     }
 
-    @Given("User name is {string}, user mail is {string}, user gender is {string}, user status is {string}")
+    @Given("Create new user with fields: name is {string}, user mail is {string}, user gender is {string}, user status is {string}")
     public void userNameIsUserMailIsUserGenderIsUserStatusIs(String name, String email, String gender, String status) {
         Map<String, String> body = new HashMap<>(); // request parameters
         body.put("name", name);
@@ -99,11 +102,6 @@ public class UserSteps {
         } catch (ClassCastException e) {
             Assert.fail("Current user already exist. Please create new user with unique email.");
         }
-    }
-
-    @Then("User has created and have id")
-    public void userHasCreatedAndHaveId() {
-        Assert.assertNotNull(createdUser.get("id"));
     }
 
     private Map<String, String> getStringMap(Map<Object, Object> map) {
@@ -128,5 +126,24 @@ public class UserSteps {
         response = controller.performGetUserById(createdUser.get("id")); // search created user
         searchableUser = getStringMap(response.getBody().jsonPath().get("data")); // fill fields searched user
         Assert.assertEquals(searchableUser.get("name"), name);
+    }
+
+    @Then("Delete current user")
+    public void deleteCurrentUser() {
+        response = controller.performDELETE(createdUser.get("id")); // delete current user
+    }
+
+    @After
+    public void deleteCreatedUser() {
+        response = controller.performDELETE(createdUser.get("id"));
+    }
+
+    @Then("Current user shouldn't be exist")
+    public void currentUserShouldnTBeExist() {
+        response = controller.performGetUserById(createdUser.get("id"));
+        int actualCode = response.body().jsonPath().get("code"); // get code
+        Map<String, String> data = response.body().jsonPath().get("data"); // get message
+        Assert.assertEquals(actualCode, 404); // check status
+        Assert.assertEquals(data.get("message"), "Resource not found"); // check message
     }
 }

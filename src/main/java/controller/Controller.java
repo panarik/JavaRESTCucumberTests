@@ -45,6 +45,10 @@ public class Controller {
         return given().spec(setupSpec(id)).headers(getHeaders()).body(body).patch(); // UPDATE with Spec options
     }
 
+    public Response performDELETE(String id) {
+        return given().spec(setupSpec(id)).headers(getHeaders()).delete(); // DELETE with Spec options
+    }
+
     private RequestSpecification setupSpec(String path) {
         return new RequestSpecBuilder()
                 .setContentType(ContentType.JSON)

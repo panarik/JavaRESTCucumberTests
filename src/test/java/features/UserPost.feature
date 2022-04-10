@@ -1,16 +1,16 @@
 Feature:
-  POST operations - Users to /public-api/users/
+  POST/UPDATE/DELETE operations with users
 
   Scenario: Create new user and check fields created user
-    Given User name is "Test", user mail is "test1@test.dev", user gender is "male", user status is "active"
-    Then User has created and have id
-    Then Search user by this id and compare his fields with created user
+    Given Create new user with fields: name is "Test", user mail is "test1@test.dev", user gender is "male", user status is "active"
+    Then Search user by current id and compare his fields with created user
 
-  Scenario: Update created user and check his name
-    Given User name is "Test", user mail is "test1@test.dev", user gender is "male", user status is "active"
-    Then Update current user name with "Test Updated"
+  Scenario: Update user and check his name
+    Given Create new user with fields: name is "Test", user mail is "test1@test.dev", user gender is "male", user status is "active"
+    Given Update current user name with "Test Updated"
     Then Current user name should be "Test Updated"
 
-  Scenario: Delete created user
-    Given Delete current user
+  Scenario: Delete user and check this user has been deleted
+    Given Create new user with fields: name is "Test", user mail is "test1@test.dev", user gender is "male", user status is "active"
+    Then Delete current user
     Then Current user shouldn't be exist
