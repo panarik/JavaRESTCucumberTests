@@ -118,7 +118,7 @@ public class UserSteps {
         body.put("name", name); // update user name
         body.put("email", createdUser.get("email"));
         body.put("status", createdUser.get("status"));
-        controller.performUPDATE(createdUser.get("id"), body);
+        response = controller.performUPDATE(createdUser.get("id"), body);
     }
 
     @Then("Current user name should be {string}")
