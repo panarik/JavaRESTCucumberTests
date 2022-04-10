@@ -21,28 +21,34 @@ public class Controller {
      * @return {@link Response} For checking and parsing response fields.
      */
     public Response performGET() {
-        return given().spec(setupSpec()).get();
+        return given().spec(setupSpec("")).get();
+    }
+
+    public Response performGetUserById(String id) {
+        RequestSpecification requestSpec = given().spec(setupSpec(id).headers(getHeaders()));
+        Response response = requestSpec.get();
+        System.out.println(response.body().print());
+        return response;
     }
 
     /**
      * Perform POST request.
      * URL: https://gorest.co.in/public-api/users/
      * Headers: Content-Type, Authorization.
-     * Body: NONE
      *
      * @param body - Custom body with {@link HashMap} format: key-value.
      * @return {@link Response} For checking and parsing response fields.
      */
     public Response performPOST(Map<String, String> body) {
-        return given().spec(setupSpec()).headers(getHeaders()).body(body).post(); // post with Spec options
+        return given().spec(setupSpec("")).headers(getHeaders()).body(body).post(); // post with Spec options
     }
 
-    private RequestSpecification setupSpec() {
+    private RequestSpecification setupSpec(String path) {
         return new RequestSpecBuilder()
-                .setBaseUri("https://gorest.co.in/public-api/")
-                .setBasePath("/users")
                 .setContentType(ContentType.JSON)
-                .build();
+                .setBaseUri("https://gorest.co.in/public-api/users/" + path)
+                .build()
+                .log().all();
     }
 
     private Map<String, String> getHeaders() {
