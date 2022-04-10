@@ -6,8 +6,9 @@ Feature:
     Then User has created and have id
     Then Search user by this id and compare his fields with created user
 
-  Scenario: Update created user
-    Given Update current user name "Test Updated"
+  Scenario: Update created user and check his name
+    Given User name is "Test", user mail is "test1@test.dev", user gender is "male", user status is "active"
+    Then Update current user name with "Test Updated"
     Then Current user name should be "Test Updated"
 
   Scenario: Delete created user

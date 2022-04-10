@@ -26,9 +26,7 @@ public class Controller {
 
     public Response performGetUserById(String id) {
         RequestSpecification requestSpec = given().spec(setupSpec(id).headers(getHeaders()));
-        Response response = requestSpec.get();
-        System.out.println(response.body().print());
-        return response;
+        return requestSpec.get();
     }
 
     /**
@@ -40,7 +38,11 @@ public class Controller {
      * @return {@link Response} For checking and parsing response fields.
      */
     public Response performPOST(Map<String, String> body) {
-        return given().spec(setupSpec("")).headers(getHeaders()).body(body).post(); // post with Spec options
+        return given().spec(setupSpec("")).headers(getHeaders()).body(body).post(); // POST with Spec options
+    }
+
+    public Response performUPDATE(String id, Map<String, String> body) {
+        return given().spec(setupSpec(id)).headers(getHeaders()).body(body).patch(); // UPDATE with Spec options
     }
 
     private RequestSpecification setupSpec(String path) {
