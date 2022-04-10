@@ -78,9 +78,8 @@ public class Controller {
         switch (code) {
             case (401):
                 throw new RuntimeException("Authentication failed. Need valid token");
-
             case (422):
-                throw new RuntimeException("This user already been taken\n" + response.body().print());
+                throw new RuntimeException("This user already been taken.\nResponse body: " + response.body().print());
         }
         return response;
     }

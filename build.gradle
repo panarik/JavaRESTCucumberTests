@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'java-library'
 }
 
 group 'com.github.panarik'
@@ -7,6 +8,13 @@ version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+}
+
+// add test runner configurations for use cucumber
+configurations {
+    cucumberRuntime {
+        extendsFrom testImplementation
+    }
 }
 
 dependencies {
@@ -19,9 +27,12 @@ dependencies {
     // Test tools.
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+
+    // Cucumber
     testImplementation 'io.cucumber:cucumber-java:7.2.3'
     testImplementation 'io.cucumber:cucumber-junit:7.2.3'
-}
+    testImplementation 'org.junit.vintage:junit-vintage-engine:5.7.2' // for run with Gradle task
+    }
 
 test {
     useJUnitPlatform()
